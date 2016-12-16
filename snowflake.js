@@ -19,6 +19,7 @@ var Snowflake = function(){
         this.pos.add(this.vel)
 
         if(this.pos.y > height){
+            addSnow(this.pos.x)
             this.pos = createVector(random(width),-10)
         }
     }
@@ -27,5 +28,31 @@ var Snowflake = function(){
         stroke(255)
         strokeWeight(this.size)
         point(this.pos.x, this.pos.y)
+    }
+}
+
+function addSnow(arg=false){
+    if(!arg){
+        for(i in snowLevel){
+            snowLevel[i]++
+        }
+    } else {
+        var pos = floor(arg*100/width)
+        snowLevel[pos]++
+    }
+}
+
+function smoothSnow(){
+    for(var i = 1; i < snowLevel.length-1; i++){
+        var avg = (snowLevel[i-1]+snowLevel[i+1])/2
+        if(avg-snowLevel[i] > 7){
+            snowLevel[i] += 6
+            snowLevel[i-1] -= 3
+            snowLevel[i+1] -= 3
+        } else if(snowLevel[i]-avg > 7){
+            snowLevel[i] -= 6
+            snowLevel[i-1] += 3
+            snowLevel[i+1] += 3
+        }
     }
 }
